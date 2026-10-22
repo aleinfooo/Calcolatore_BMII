@@ -1,0 +1,17 @@
+Genera un layout web con contenuto  centrato verticalmente e orizzontalmente. Il layout dev'essere a singola colonna. Il contenuto deve avere un titolo per la pagina("Calcolatore BMI"). 
+
+Lo spazio laterale per il layout dev'essere di 60px sui lati destro e sinistro.
+
+Stili comuni:
+- Usa un font senza grazie per tutto
+- Sfondo: #f1f3f5
+- Colore testo: #1f2328
+- Box bianco largo 360 px padding 24px, border radius: 12px, leggera ombra
+
+Titolo:
+fontsize: 32px
+margine inferiore: 24px
+
+Card:
+- Contiene un form con 3 campi: Nome, Peso, altezza(ciascun campo occupa una riga intera, ciascun label occupa una intera)
+- Pulsante di submit: sfondo: #1f2328 e colore testo: #f1f3f5
