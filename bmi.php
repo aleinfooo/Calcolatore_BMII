@@ -157,6 +157,10 @@
             echo "</div>";
             echo "<br><a href='form.html' class='btn-ricalcola'>Calcola di nuovo</a>";
 
+            $data_ora_date = date("d/m/Y");
+            $data_ora_time = date("H:i:s");
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+
             // Creazione e scrittura dei valori sul file log.csv
             $nf = "log.csv";
             $file = fopen($nf, "a");
