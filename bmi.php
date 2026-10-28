@@ -2,6 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Risultato BMI</title>
     <style>
         /* Stili Generali e Layout Centrato */
@@ -88,78 +89,91 @@
         }
 
         /* Link di ritorno sotto la card */
-        a {
+        a.btn-ricalcola {
             margin-top: 16px;
             color: #1f2328;
             text-decoration: none;
             font-weight: bold;
         }
 
-        a:hover {
+        a.btn-ricalcola:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-
-    <?php
-    if (isset($_POST['peso']) && isset($_POST['altezza'])) {
-        
-        $nome = htmlspecialchars($_POST['nome']);
-        
-        // Sostituiamo eventuale virgola con il punto per evitare che diventi 0
-        $peso_str = str_replace(',', '.', $_POST['peso']);
-        $altezza_str = str_replace(',', '.', $_POST['altezza']);
-
-        $peso = (float)$peso_str;
-        $altezza = (float)$altezza_str;
-
-        // Se l'altezza viene inserita in cm (es. 175 invece di 1.75), la convertiamo in metri
-        if ($altezza > 3) {
-            $altezza = $altezza / 100;
+    <?php 
+        if ($_SERVER['REQUEST_METHOD'] != "POST"){
+            header("Location: form.html");
+            exit();
         }
 
-        // Verifica dati validi
-        if ($altezza > 0 && $peso > 0) {
-            
-            // Calcolo BMI[cite: 1, 2]
-            $bmi = $peso / ($altezza * $altezza);
-            $bmi_arrotondato = number_format($bmi, 2, '.', ''); // Formato con 2 decimali[cite: 2]
+        $nome = trim($_POST['nome']);
+        $peso = trim($_POST['peso']);
+        $altezza = trim($_POST['altezza']);
 
-            // Assegnazione della fascia e della classe CSS[cite: 2]
+        if ($nome == "" || $peso == "" || $altezza == "") {
+            echo "<div class='card'><h2>Campi non correttamente inseriti.</h2></div>";
+            echo "<br><a href='form.html' class='btn-ricalcola'>Calcola di nuovo</a>";
+        } else {
+            // Pulizia numeri da eventuali virgole
+            $peso_num = (float)str_replace(',', '.', $peso);
+            $altezza_num = (float)str_replace(',', '.', $altezza);
+
+            // Conversione dell'altezza da cm a metri per la formula
+            $altezza_m = ($altezza_num > 3) ? ($altezza_num / 100) : $altezza_num;
+            
+            $bmi = 0;
+            if ($altezza_m > 0) {
+                // Calcolo BMI: peso (kg) / altezza (m)^2
+                $bmi = $peso_num / ($altezza_m * $altezza_m);
+            }
+            
+            $bmi_formattato = number_format($bmi, 2, '.', '');
+
+            // Determinazione della fascia e della classe CSS
             if ($bmi < 18.5) {
                 $classe = "sottopeso";
                 $fascia = "SOTTOPESO";
-            } elseif ($bmi >= 18.5 && $bmi < 25) {
+            } else if ($bmi >= 18.5 && $bmi <= 24.9) {
                 $classe = "normopeso";
                 $fascia = "NORMOPESO";
-            } elseif ($bmi >= 25 && $bmi < 30) {
+            } else if ($bmi >= 25 && $bmi <= 29.9) {
                 $classe = "sovrappeso";
                 $fascia = "SOVRAPPESO";
             } else {
                 $classe = "obesita";
-                $fascia = "OBESITA";
+                $fascia = "OBESITÀ";
             }
 
-            // Stampa della card[cite: 2]
-            echo "<div class='card " . $classe . "'>";
-            echo "<p><strong>Nome:</strong> " . $nome . "</p>";
-            echo "<p><strong>Peso:</strong> " . $peso . " kg</p>";
-            echo "<p><strong>Altezza:</strong> " . $altezza . " m</p>";
-            echo "<div class='valore-bmi'>" . $bmi_arrotondato . "</div>";
-            echo "<div class='fascia'>" . $fascia . "</div>";
+            // Output della Card Risultato
+            echo "<h1>Risultato per $nome</h1>";
+            echo "<div class='card $classe'>";
+            echo "  <p><strong>Nome:</strong> $nome</p>";
+            echo "  <p><strong>Peso:</strong> $peso_num kg</p>";
+            echo "  <p><strong>Altezza:</strong> $altezza_m m</p>";
+            echo "  <div class='valore-bmi'>$bmi_formattato</div>";
+            echo "  <div class='fascia'>$fascia</div>";
             echo "</div>";
+            echo "<br><a href='form.html' class='btn-ricalcola'>Calcola di nuovo</a>";
 
-        } else {
-            echo "<div class='card'><h2>Inserisci valori di peso e altezza validi.</h2></div>";
+            // Creazione e scrittura dei valori sul file log.csv
+            $nf = "log.csv";
+            $file = fopen($nf, "a");
+            if ($file) {
+                $record = date("d/m/Y") . ", ";
+                $record .= date("H:i:s") . ", ";
+                $record .= $_SERVER['REMOTE_ADDR'] . ", ";
+                $record .= $nome . ", ";
+                $record .= $peso_num . ", ";
+                $record .= $altezza_m . ", ";
+                $record .= $bmi_formattato . ", ";
+                $record .= $classe . ";\r\n";
+                
+                fwrite($file, $record);
+                fclose($file);
+            }
         }
-
-    } else {
-        echo "<div class='card'><h2>Dati mancanti.</h2></div>";
-    }
     ?>
-
-    <a href="form.html">Calcola di nuovo</a>
-
 </body>
 </html>
