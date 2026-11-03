@@ -175,7 +175,7 @@
                 $record .= $classe . ";\r\n";
                 
                 fwrite($file, $record);
-                fclose($file);
+                fclose($file)
             }
         }
     ?>
