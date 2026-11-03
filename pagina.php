@@ -70,7 +70,7 @@
                     $fascia = "SOVRAPPESO";
                 } else {
                     $classe = "obesita";
-                    $fascia = "OBESITÀ";
+                    $fascia = "OBESITA";
                 }
 
                 // Scrittura sul file log.csv
