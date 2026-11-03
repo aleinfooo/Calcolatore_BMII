@@ -49,7 +49,7 @@
                 $fascia = "SOVRAPPESO";
             } else {
                 $classe = "obesita";
-                $fascia = "OBESITÀ";
+                $fascia = "OBESITA";
             }
 
             // Output della Card Risultato
