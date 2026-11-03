@@ -50,7 +50,11 @@
                 $altezza_num = (float)str_replace(',', '.', $altezza);
 
                 // Conversione cm -> m se necessario
-                $altezza_m = ($altezza_num > 3) ? ($altezza_num / 100) : $altezza_num;
+                if ($altezza_num > 3) {
+                    $altezza_m = $altezza_num / 100; // Se è maggiore di 3 (es. 175cm), converti in metri (1.75)
+                } else {
+                    $altezza_m = $altezza_num;       // Altrimenti lascia il valore così com'è (es. 1.75m)
+                }
                 
                 $bmi = 0;
                 if ($altezza_m > 0) {
