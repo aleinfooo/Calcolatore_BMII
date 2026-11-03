@@ -104,10 +104,6 @@
                     <div class="valore-bmi"><?= $bmi_formattato ?></div>
                     <div class="fascia"><?= $fascia ?></div>
                 </div>
-        <?php 
-            }
-        } 
-        ?>
     </div>
 
 </body>
