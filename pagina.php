@@ -41,7 +41,8 @@
             $peso = trim($_POST['peso']);
             $altezza = trim($_POST['altezza']);
 
-            if ($nome == "" || $peso == "" || $altezza == "") {
+            // Controllo: se il nome è vuoto O se è numerico, oppure peso/altezza sono vuoti
+            if ($nome == "" || is_numeric($nome) || $peso == "" || $altezza == "") {
                 echo "<br><div class='card'><h2>Campi non correttamente inseriti.</h2></div>";
             } else {
                 // Pulizia e conversione numeri
@@ -70,7 +71,7 @@
                     $fascia = "SOVRAPPESO";
                 } else {
                     $classe = "obesita";
-                    $fascia = "OBESITA";
+                    $fascia = "OBESITÀ";
                 }
 
                 // Scrittura sul file log.csv
